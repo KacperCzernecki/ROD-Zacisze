@@ -14,8 +14,8 @@ export default function AdminLogin() {
     const data = await signInWithEmail(email, password);
     if (!data) setError("Błędny email lub hasło");
     else {
-      router.refresh();
       router.push("/");
+      router.refresh();
     }
   };
 
