@@ -10,7 +10,6 @@ export async function readPost() {
     if (error) {
       return "Nie można odczytać postu. Błąd bazy danych";
     } else {
-      console.log(data);
       return data;
     }
   } catch (error) {

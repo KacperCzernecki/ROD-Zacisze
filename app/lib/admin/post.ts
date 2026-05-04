@@ -28,7 +28,9 @@ export async function createPost(
 
     const { data: urlData } = supabase.storage
       .from("pictures")
-      .getPublicUrl(uploadData?.fullPath || "");
+      .getPublicUrl(uploadData?.path || "");
+
+    console.log(urlData.publicUrl);
 
     const { error: insertError } = await supabase
       .from("post_images")
