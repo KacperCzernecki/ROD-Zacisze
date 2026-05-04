@@ -1,18 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { createPost } from "@/app/lib/admin/post";
 
 export default function CreatePostForm() {
-  const [postType, setPostType] = useState<
-    "announcement" | "event" | "other" | ""
-  >("");
+  const [postType, setPostType] = useState<"announcement" | "event" | "other">(
+    "announcement",
+  );
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setpostContent] = useState("");
   const [postFiles, setPostFiles] = useState<File[]>([]);
 
   const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    console.log(postType, postTitle, postContent, postFiles);
+    createPost(postTitle, postType, postContent, postFiles);
   };
 
   return (

@@ -9,7 +9,7 @@ export async function createPost(
   const supabase = createClient();
   const createdAt = Date.now();
 
-  const { id, error } = await supabase
+  const { data, error } = await supabase
     .from("posts")
     .insert({ type: type, title: title, content: content })
     .select("id");
@@ -18,12 +18,23 @@ export async function createPost(
   }
 
   for (const file of files) {
-    const { data, error } = await supabase.storage
+    const { data: uploadData, error: uploadError } = await supabase.storage
       .from("pictures")
       .upload(`${file.name}_${createdAt}`, file);
 
-    const { urlData } = supabase.storage
+    if (uploadError) {
+      return "Błąd z dodawaniem zdjęcia";
+    }
+
+    const { data: urlData } = supabase.storage
       .from("pictures")
-      .getPublicUrl(data?.fullPath);
+      .getPublicUrl(uploadData?.fullPath || "");
+
+    const { error: insertError } = await supabase
+      .from("post_images")
+      .insert({ image_url: urlData.publicUrl, post_id: data[0].id });
+    if (insertError) {
+      return "Błąd bazy danych. Zdjęcie nie zostało zapisane";
+    }
   }
 }
