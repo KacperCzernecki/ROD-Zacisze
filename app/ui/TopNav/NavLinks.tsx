@@ -13,7 +13,7 @@ export default function NavLinks({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
   return (
-    <div className="w-screen bg-amber-900 flex justify-around my-2">
+    <div className="bg-amber-900 flex justify-around my-100">
       {links.map((link) => {
         return (
           <Link
