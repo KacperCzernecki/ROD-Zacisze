@@ -3,7 +3,7 @@
 import NavLinks from "./NavLinks";
 import { createClient } from "@/app/lib/supabase/server";
 
-export default async function TopNav() {
+export default async function Nav() {
   const supabase = await createClient();
   const {
     data: { user },

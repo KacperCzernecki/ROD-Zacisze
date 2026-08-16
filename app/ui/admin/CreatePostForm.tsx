@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { createPost } from "@/app/lib/admin/post";
+import { useRouter } from "next/navigation";
 
 export default function CreatePostForm() {
   const [postType, setPostType] = useState<"announcement" | "event" | "other">(
@@ -10,10 +11,12 @@ export default function CreatePostForm() {
   const [postTitle, setPostTitle] = useState("");
   const [postContent, setpostContent] = useState("");
   const [postFiles, setPostFiles] = useState<File[]>([]);
+  const router = useRouter();
 
   const onSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     createPost(postTitle, postType, postContent, postFiles);
+    router.push("/");
   };
 
   return (

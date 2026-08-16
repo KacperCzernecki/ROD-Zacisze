@@ -13,7 +13,7 @@ export default function NavLinks({ isAdmin }: { isAdmin: boolean }) {
   const pathname = usePathname();
   const router = useRouter();
   return (
-    <div className="bg-amber-900 flex justify-around my-100">
+    <div className="fixed bottom-3 flex self-center gap-10 bg-amber-900 px-5 rounded-4xl">
       {links.map((link) => {
         return (
           <Link
@@ -28,9 +28,21 @@ export default function NavLinks({ isAdmin }: { isAdmin: boolean }) {
           </Link>
         );
       })}
-      {isAdmin && <Link href={"/admin/dashboard"}>Panel Admina</Link>}
+      {isAdmin && (
+        <Link
+          className={clsx("text-2xl", {
+            "font-bold": pathname === "/admin/dashboard",
+            "hover:text-amber-950 hover:rounded":
+              pathname !== "/admin/dashboard",
+          })}
+          href={"/admin/dashboard"}
+        >
+          Panel Admina
+        </Link>
+      )}
       {isAdmin && (
         <button
+          className={"text-2xl hover:text-amber-950 hover:rounded"}
           onClick={async () => {
             await signOut();
             router.refresh();

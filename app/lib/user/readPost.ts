@@ -1,6 +1,5 @@
 import { PostgrestError } from "@supabase/supabase-js";
 import { createClient } from "../supabase/client";
-import { count } from "console";
 
 export async function readPost(page: number, type: string) {
   const supabase = createClient();
