@@ -1,5 +1,6 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+
+import { useEffect, useMemo, useRef, useState } from "react";
 import { readPost } from "./lib/user/readPost";
 import { PostgrestError } from "@supabase/supabase-js";
 import PostCard from "./ui/posts/PostCard";
@@ -14,29 +15,30 @@ type Post = {
 };
 
 export default function Home() {
-  const [data, setData] = useState<Post[] | undefined | null>([]);
+  const [data, setData] = useState<Post[]>([]);
   const [error, setError] = useState<PostgrestError | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [cursor, setCursor] = useState<object | null>(null);
+  const [hasMore, setHasMore] = useState(true);
   const [postType, setPostType] = useState<
     "all" | "announcement" | "event" | "other"
   >("all");
-  const [page, setPage] = useState<number>(1);
-  const [count, setCount] = useState<number>(0);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     const fetch = async () => {
-      const result = await readPost(page, postType);
+      const result = await readPost(cursor, postType);
 
       if (result.error) {
         setError(result.error);
       }
-      setData(result.data);
-      setCount(result.count || 0);
+      setData((current) => [...current, ...(result.data ?? [])]);
     };
     fetch();
-  }, [page, postType]);
+  });
 
-  const numOfPages = useMemo(() => {
-    return Math.ceil(count / 10);
-  }, [count]);
+  useEffect(() => {});
+
   return (
     <div>
       {error && <div>Napotkano błąd</div>}
@@ -51,7 +53,7 @@ export default function Home() {
             </ul>
           </div>
           <div className="flex flex-col gap-10 justify-center items-center">
-            {data?.map((post: Post) => {
+            {data.map((post: Post) => {
               return (
                 <PostCard
                   key={post.id}
@@ -64,15 +66,7 @@ export default function Home() {
               );
             })}
           </div>
-          <div>
-            {Array.from({ length: numOfPages }, (_, i) => i + 1).map(
-              (pageNum) => (
-                <button key={pageNum} onClick={() => setPage(pageNum)}>
-                  {pageNum}
-                </button>
-              ),
-            )}
-          </div>
+          <div ref={bottomRef} />
         </>
       )}
     </div>
