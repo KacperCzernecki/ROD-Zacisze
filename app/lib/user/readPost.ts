@@ -7,7 +7,6 @@ export async function readPost(
 ) {
   const supabase = createClient();
   const range = 10;
-  let hasMore = false;
 
   try {
     let query = supabase
@@ -21,13 +20,13 @@ export async function readPost(
     }
     if (cursor !== null) {
       query = query.or(
-        `created_at.lt.${cursor.created_at}, and(created_at.eq.${cursor.created_at}, id.lt.${cursor.id})`,
+        `created_at.lt.${cursor.created_at},and(created_at.eq.${cursor.created_at}, id.lt.${cursor.id})`,
       );
     }
 
     const { data, error } = await query;
     return { data: data?.slice(0, 10), error, hasMore: data?.length === 11 };
   } catch (error) {
-    return { data: null, error: error as PostgrestError };
+    return { data: null, hasMore: false, error: error as PostgrestError };
   }
 }

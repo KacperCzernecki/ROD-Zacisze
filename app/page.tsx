@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { readPost } from "./lib/user/readPost";
 import { PostgrestError } from "@supabase/supabase-js";
 import PostCard from "./ui/posts/PostCard";
+import { read } from "fs";
 
 type Post = {
   id: string;
@@ -18,7 +19,10 @@ export default function Home() {
   const [data, setData] = useState<Post[]>([]);
   const [error, setError] = useState<PostgrestError | null>(null);
   const [loading, setLoading] = useState(false);
-  const [cursor, setCursor] = useState<object | null>(null);
+  const [cursor, setCursor] = useState<{
+    created_at: string;
+    id: string;
+  } | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [postType, setPostType] = useState<
     "all" | "announcement" | "event" | "other"
@@ -33,11 +37,52 @@ export default function Home() {
         setError(result.error);
       }
       setData((current) => [...current, ...(result.data ?? [])]);
+      setHasMore(result.hasMore);
+
+      if (result.hasMore && result.data) {
+        setCursor({
+          created_at: result.data[result.data.length - 1].created_at,
+          id: result.data[result.data.length - 1].id,
+        });
+      }
     };
     fetch();
-  });
+  }, [cursor, postType]);
 
-  useEffect(() => {});
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      const loadMore = async () => {
+        setLoading(true);
+        const result = await readPost(cursor, postType);
+
+        if (result.error) {
+          setError(result.error);
+          setLoading(false);
+          return;
+        }
+        setData((current) => [...current, ...result.data]);
+        setHasMore(result.hasMore);
+        if (result.hasMore && result.data) {
+          setCursor({
+            created_at: result.data[result.data.length - 1].created_at,
+            id: result.data[result.data.length - 1].id,
+          });
+        }
+        setLoading(false);
+      };
+      if (entries[0].isIntersecting && hasMore && !loading) {
+        loadMore();
+      }
+    });
+
+    if (bottomRef.current) {
+      observer.observe(bottomRef.current);
+    }
+
+    return () => {
+      observer.disconnect();
+    };
+  });
 
   return (
     <div>
