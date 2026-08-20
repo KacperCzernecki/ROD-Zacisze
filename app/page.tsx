@@ -4,7 +4,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { readPost } from "./lib/user/readPost";
 import { PostgrestError } from "@supabase/supabase-js";
 import PostCard from "./ui/posts/PostCard";
-import { read } from "fs";
 
 type Post = {
   id: string;
@@ -27,50 +26,99 @@ export default function Home() {
   const [postType, setPostType] = useState<
     "all" | "announcement" | "event" | "other"
   >("all");
+
+  const cursorRef = useRef<{
+    created_at: string;
+    id: string;
+  } | null>(null);
+  const hasMoreRef = useRef(true);
+  const loadingRef = useRef(false);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    const controller = new AbortController();
     const fetch = async () => {
-      const result = await readPost(cursor, postType);
+      setData([]);
+      setCursor(null);
+      cursorRef.current = null;
+      setHasMore(true);
+      hasMoreRef.current = true;
+      setLoading(true);
+      loadingRef.current = true;
 
-      if (result.error) {
+      const result = await readPost(null, postType, controller.signal);
+
+      if (result.error && !controller.signal.aborted) {
         setError(result.error);
+        setLoading(false);
+        loadingRef.current = false;
+        return;
       }
-      setData((current) => [...current, ...(result.data ?? [])]);
+      setData(result.data ?? []);
       setHasMore(result.hasMore);
+      hasMoreRef.current = result.hasMore;
 
       if (result.hasMore && result.data) {
-        setCursor({
+        const newCursor = {
           created_at: result.data[result.data.length - 1].created_at,
           id: result.data[result.data.length - 1].id,
-        });
+        };
+        setCursor(newCursor);
+        cursorRef.current = newCursor;
       }
+      setLoading(false);
+      loadingRef.current = false;
     };
     fetch();
-  }, [cursor, postType]);
+
+    return () => {
+      controller.abort();
+    };
+  }, [postType]);
 
   useEffect(() => {
+    const controller = new AbortController();
     const observer = new IntersectionObserver((entries) => {
       const loadMore = async () => {
         setLoading(true);
-        const result = await readPost(cursor, postType);
+        loadingRef.current = true;
+        const result = await readPost(
+          cursorRef.current,
+          postType,
+          controller.signal,
+        );
+
+        if (controller.signal.aborted) {
+          setLoading(false);
+          loadingRef.current = false;
+          return;
+        }
 
         if (result.error) {
           setError(result.error);
           setLoading(false);
+          loadingRef.current = false;
           return;
         }
-        setData((current) => [...current, ...result.data]);
+        setData((current) => [...current, ...(result.data ?? [])]);
         setHasMore(result.hasMore);
+        hasMoreRef.current = result.hasMore;
         if (result.hasMore && result.data) {
-          setCursor({
+          const newCursor = {
             created_at: result.data[result.data.length - 1].created_at,
             id: result.data[result.data.length - 1].id,
-          });
+          };
+          setCursor(newCursor);
+          cursorRef.current = newCursor;
         }
         setLoading(false);
+        loadingRef.current = false;
       };
-      if (entries[0].isIntersecting && hasMore && !loading) {
+      if (
+        entries[0].isIntersecting &&
+        hasMoreRef.current &&
+        !loadingRef.current
+      ) {
         loadMore();
       }
     });
@@ -81,8 +129,9 @@ export default function Home() {
 
     return () => {
       observer.disconnect();
+      controller.abort();
     };
-  });
+  }, [postType]);
 
   return (
     <div>

@@ -25,7 +25,7 @@ export default function NavLinks({ isAdmin }: { isAdmin: boolean }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="fixed bottom-3 flex translate-11 justify-center items-center self-center gap-10 bg-amber-900 px-5 rounded-4xl hover:translate-y-0 hover:flex">
+      <div className="fixed bottom-2 flex translate-11 justify-center items-center self-center gap-10 bg-amber-900 px-5 rounded-4xl hover:translate-y-0 hover:flex">
         {links.map((link) => {
           return (
             <Link

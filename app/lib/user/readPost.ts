@@ -4,6 +4,7 @@ import { createClient } from "../supabase/client";
 export async function readPost(
   cursor: { created_at: string; id: string } | null,
   type: string,
+  signal: AbortSignal,
 ) {
   const supabase = createClient();
   const range = 10;
@@ -14,7 +15,8 @@ export async function readPost(
       .select("*, post_images(image_url)")
       .order("created_at", { ascending: false })
       .order("id", { ascending: false })
-      .range(0, range);
+      .range(0, range)
+      .abortSignal(signal);
     if (type !== "all") {
       query = query.eq("type", type);
     }
