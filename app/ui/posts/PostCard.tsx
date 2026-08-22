@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useEffect } from "react";
 
 type PostImage = {
   image_url: string;
@@ -19,9 +20,18 @@ export default function PostCard({
   images,
   created_at,
 }: PostCardProps) {
+  const dateTime = created_at.split("T");
+  const date = dateTime[0].split("-");
+  const [year, month, day] = date;
+
   return (
-    <div>
-      <h1>{title}</h1>
+    <div className="flex flex-col max-w-4xl max-h-145 border-amber-800 border-2 p-2 lg:p-8 lg:gap-5">
+      <div className="flex justify-between">
+        <h1>{title}</h1>
+        <p className="text-xs">
+          {day}.{month}.{year}
+        </p>
+      </div>
       <p>{type}</p>
       <p>{content}</p>
       <div>
@@ -37,7 +47,6 @@ export default function PostCard({
           ></Image>
         ))}
       </div>
-      <p>{created_at}</p>
     </div>
   );
 }

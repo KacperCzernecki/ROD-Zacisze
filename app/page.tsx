@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { readPost } from "./lib/user/readPost";
 import { PostgrestError } from "@supabase/supabase-js";
 import PostCard from "./ui/posts/PostCard";
@@ -134,19 +134,19 @@ export default function Home() {
   }, [postType]);
 
   return (
-    <div>
+    <div className="flex flex-col lg:gap-6 px-10 lg:px-20 lg:pt-12">
       {error && <div>Napotkano błąd</div>}
       {!error && (
         <>
-          <div className="w-full items-center">
-            <ul className="flex flex-row justify-center gap-5">
+          <div className="w-full">
+            <ul className="flex flex-row gap-1 lg:gap-5">
               <li onClick={() => setPostType("all")}>Wszystkie</li>
               <li onClick={() => setPostType("announcement")}>Ogłoszenia</li>
               <li onClick={() => setPostType("event")}>Wydarzenia</li>
               <li onClick={() => setPostType("other")}>Inne</li>
             </ul>
           </div>
-          <div className="flex flex-col gap-10 justify-center items-center">
+          <div className="flex flex-col gap-1 lg:gap-6">
             {data.map((post: Post) => {
               return (
                 <PostCard
