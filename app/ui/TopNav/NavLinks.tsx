@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import signOut from "@/app/lib/signOut";
-import { useEffect, useState } from "react";
 
 export default function NavLinks({ isAdmin }: { isAdmin: boolean }) {
   const links = [
@@ -25,8 +24,8 @@ export default function NavLinks({ isAdmin }: { isAdmin: boolean }) {
               key={link.name}
               href={link.href}
               className={clsx("", {
-                "font-bold": pathname === link.href,
-                "hover:text-amber-950 hover:rounded": pathname !== link.href,
+                "text-white bg-highlight": pathname === link.href,
+                "hover:text-amber-950": pathname !== link.href,
               })}
             >
               <p>{link.name}</p>
