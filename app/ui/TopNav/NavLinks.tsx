@@ -16,8 +16,8 @@ export default function NavLinks({ isAdmin }: { isAdmin: boolean }) {
   const router = useRouter();
 
   return (
-    <div className="lg:flex lg:justify-center lg:w-full pt-2">
-      <div className="fixed w-full lg:w-fit inset-x-0 lg:inset-x-auto bottom-0 pb-[env(safe-area-inset-bottom)] justify-between flex lg:justify-center items-center self-center lg:gap-10 lg:min-w-fit lg:bottom-2 bg-amber-900 px-5 lg:rounded-4xl">
+    <div className="lg:flex lg:justify-center lg:w-full lg:pt-2">
+      <div className="fixed w-full px-5 lg:w-fit inset-x-0 lg:inset-x-auto bottom-0 pb-[env(safe-area-inset-bottom)] justify-between flex lg:justify-center items-center self-center h-14 lg:gap-10 lg:min-w-fit lg:bottom-2 bg-amber-900 lg:px-5 lg:rounded-4xl">
         {links.map((link) => {
           return (
             <Link

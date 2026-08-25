@@ -16,6 +16,12 @@ type Post = {
 };
 
 export default function Home() {
+  const types = [
+    { value: "all", label: "Wszystkie" },
+    { value: "announcement", label: "Ogłoszenie" },
+    { value: "event", label: "Wydarzenie" },
+    { value: "other", label: "Inne" },
+  ] as const;
   const [data, setData] = useState<Post[]>([]);
   const [error, setError] = useState<PostgrestError | null>(null);
   const [loading, setLoading] = useState(false);
@@ -135,52 +141,33 @@ export default function Home() {
   }, [postType]);
 
   return (
-    <div className="flex flex-col lg:gap-6 px-10 lg:px-20">
+    <div className="flex w-full flex-col gap-2 px-5 lg:gap-6 lg:px-20">
       {error && <div>Napotkano błąd</div>}
       {!error && (
         <>
-          <div className="flex  w-full justify-center lg:justify-start">
-            <ul className="flex flex-row gap-1 lg:gap-5">
-              <li
-                onClick={() => setPostType("all")}
-                className={clsx("py-3.5 px-1.5 rounded-full cursor-pointer", {
-                  "bg-highlight text-white": postType === "all",
-                  "bg-unselected text-text-main-200": postType !== "all",
-                })}
-              >
-                Wszystkie
-              </li>
-              <li
-                onClick={() => setPostType("announcement")}
-                className={clsx("py-3.5 px-1.5 rounded-full cursor-pointer", {
-                  "bg-highlight text-white": postType === "announcement",
-                  "bg-unselected text-text-main-200":
-                    postType !== "announcement",
-                })}
-              >
-                Ogłoszenia
-              </li>
-              <li
-                onClick={() => setPostType("event")}
-                className={clsx("py-3.5 px-1.5 rounded-full cursor-pointer", {
-                  "bg-highlight text-white": postType === "event",
-                  "bg-unselected text-text-main-200": postType !== "event",
-                })}
-              >
-                Wydarzenia
-              </li>
-              <li
-                onClick={() => setPostType("other")}
-                className={clsx("py-3.5 px-1.5 rounded-full cursor-pointer", {
-                  "bg-highlight text-white": postType === "other",
-                  "bg-unselected text-text-main-200": postType !== "other",
-                })}
-              >
-                Inne
-              </li>
+          <div className="flex w-full justify-center lg:justify-start">
+            <ul className="flex w-screen flex-row py-2 lg:py-0 gap-1 lg:gap-5">
+              {types.map((type) => (
+                <li key={type.value}>
+                  <button
+                    type="button"
+                    onClick={() => setPostType(type.value)}
+                    className={clsx(
+                      "py-1.5 px-3.5 rounded-full cursor-pointer font-mono font-semibold text-sm",
+                      {
+                        "bg-highlight text-white": type.value === postType,
+                        "bg-unselected text-text-main-200":
+                          type.value !== postType,
+                      },
+                    )}
+                  >
+                    {type.label}
+                  </button>
+                </li>
+              ))}
             </ul>
           </div>
-          <div className="flex flex-col gap-1 lg:gap-6">
+          <div className="flex flex-col gap-2 lg:gap-6">
             {data.map((post: Post) => {
               return (
                 <PostCard

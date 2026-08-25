@@ -25,7 +25,7 @@ export default function PostCard({
   const [year, month, day] = date;
 
   return (
-    <div className="flex flex-col max-w-4xl max-h-145 border-amber-800 border-2 p-2 lg:p-8 lg:gap-5">
+    <div className="flex flex-col max-w-4xl max-h-145 border-amber-800 border-2 p-2 gap-1 lg:p-8 lg:gap-5">
       <div className="flex justify-between">
         <h1>{title}</h1>
         <p className="text-xs">
