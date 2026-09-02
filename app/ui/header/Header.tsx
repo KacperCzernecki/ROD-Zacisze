@@ -1,6 +1,6 @@
 export default function Header() {
   return (
-    <div className="flex flex-col lg:gap-2 px-6 lg:px-20 lg:pt-12 lg:pb-6 border border-b border-borderMain">
+    <div className="flex flex-col w-screen justify-center items-center md:justify-start md:items-stretch lg:gap-2 px-6 lg:px-20 lg:pt-12 lg:pb-6 border-b border-borderMain">
       <p className="hidden lg:block text-highlight font-bold text-xs">
         RODZINNE OGRÓDKI DZIAŁKOWE
       </p>

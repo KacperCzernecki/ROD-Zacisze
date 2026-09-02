@@ -141,12 +141,12 @@ export default function Home() {
   }, [postType]);
 
   return (
-    <div className="flex w-full flex-col gap-2 px-5 lg:gap-6 lg:px-20">
+    <div className="flex w-full flex-col gap-2 md:px-5 lg:gap-6 lg:px-20">
       {error && <div>Napotkano błąd</div>}
       {!error && (
         <>
           <div className="flex w-full justify-center lg:justify-start">
-            <ul className="flex w-screen flex-row py-2 lg:py-0 gap-1 lg:gap-5">
+            <ul className="flex flex-col md:flex-row py-2 lg:py-0 gap-1 lg:gap-5">
               {types.map((type) => (
                 <li key={type.value}>
                   <button

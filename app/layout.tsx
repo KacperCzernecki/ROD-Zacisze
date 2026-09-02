@@ -34,7 +34,7 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${geistMono.variable} ${geistSans.variable} h-full antialiased`}
     >
-      <body className="min-h-dvh flex flex-col lg:w-auto lg:gap-10 lg:py-80 bg-background">
+      <body className="min-h-dvh flex flex-col justify-center items-center md:justify-start md:items-stretch lg:w-auto lg:gap-10 lg:py-80 bg-background">
         <Header />
         <main className="min-h-dvh pb-14 lg:pb-0">{children}</main>
         <Nav />
