@@ -31,35 +31,38 @@ export default function NavLinks({ isAdmin }: { isAdmin: boolean }) {
             <Link
               key={link.name}
               href={link.href}
-              className={clsx("flex md:gap-2 py-2 px-4", {
-                "text-white bg-highlight ": pathname === link.href,
-                "hover:text-amber-950": pathname !== link.href,
-              })}
+              className={clsx(
+                "text-white flex flex-col items-center md:items-stretch md:flex-row md:gap-2 py-2 px-4",
+                {
+                  "text-white bg-highlight ": pathname === link.href,
+                  "hover:text-amber-950": pathname !== link.href,
+                },
+              )}
             >
               <LinkIcon className="w-4 font-semibold" />
-              <p className="hidden md:block text-sm font-semibold">
-                {link.name}
-              </p>
+              <p className="text-sm font-semibold">{link.name}</p>
             </Link>
           );
         })}
         {isAdmin && (
           <Link
-            className={clsx("flex md:gap-2 py-2 px-4", {
-              "font-bold": pathname === "/admin/dashboard",
-              "hover:text-amber-950 hover:rounded":
-                pathname !== "/admin/dashboard",
-            })}
+            className={clsx(
+              "text-white flex flex-col items-center md:items-stretch md:flex-row md:gap-2 py-2 px-4",
+              {
+                "text-white bg-highlight ": pathname === "/admin/dashboard",
+                "hover:text-amber-950": pathname !== "/admin/dashboard",
+              },
+            )}
             href={"/admin/dashboard"}
           >
             <Cog6ToothIcon className="w-4 font-semibold" />
-            <span className="hidden md:block text-sm font-semibold">Admin</span>
+            <span className="text-sm font-semibold">Admin</span>
           </Link>
         )}
         {isAdmin && (
           <button
             className={
-              "flex md:gap-2 py-2 px-4 lg:text-2xl hover:text-amber-950 hover:rounded"
+              " text-white flex flex-col items-center md:items-stretch md:flex-row md:gap-2 py-2 px-4 lg:text-2xl hover:text-amber-950 hover:rounded"
             }
             onClick={async () => {
               await signOut();
@@ -67,7 +70,7 @@ export default function NavLinks({ isAdmin }: { isAdmin: boolean }) {
             }}
           >
             <ArrowLeftStartOnRectangleIcon className="w-4 font-semibold" />
-            <span className="hidden md:block text-sm font-semibold">
+            <span className=" hidden md:block text-sm font-semibold">
               Wyloguj
             </span>
           </button>

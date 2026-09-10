@@ -6,10 +6,12 @@ import { PostgrestError } from "@supabase/supabase-js";
 import { clsx } from "clsx";
 import PostCard from "./ui/posts/PostCard";
 
+type PostType = "all" | "announcement" | "event" | "other";
+
 type Post = {
   id: string;
   title: string;
-  type: string;
+  type: PostType;
   content: string;
   created_at: string;
   post_images: { image_url: string }[];
