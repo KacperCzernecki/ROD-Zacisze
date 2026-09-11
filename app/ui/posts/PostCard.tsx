@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import clsx from "clsx";
 import PostImage from "./PostImage";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
@@ -57,7 +58,7 @@ export default function PostCard({
           {images.length > 1 && (
             <button
               onClick={prev}
-              className="cursor-pointer border border-border-main rounded-2xl"
+              className="cursor-pointer hidden md:block border border-border-main rounded-2xl active:bg-highlight"
             >
               <ChevronLeftIcon className="w-6 text-text-main-100" />
             </button>
@@ -77,11 +78,27 @@ export default function PostCard({
             }}
           >
             <PostImage image_url={images[currentIndex].image_url} />
+            {images.length > 1 && (
+              <div className="w-full z-10 flex self-end gap-3 justify-center py-3">
+                {images.map((image, index) => (
+                  <button
+                    key={image.image_url}
+                    onClick={() => setCurrentIndex(index)}
+                    className={clsx(
+                      "flex w-2 h-2 border border-unselected rounded-full cursor-pointer",
+                      {
+                        "bg-highlight border-0": currentIndex === index,
+                      },
+                    )}
+                  ></button>
+                ))}
+              </div>
+            )}
           </div>
           {images.length > 1 && (
             <button
               onClick={next}
-              className="cursor-pointer border border-border-main rounded-2xl"
+              className="cursor-pointer hidden md:block border border-border-main rounded-2xl active:bg-highlight"
             >
               <ChevronRightIcon className="w-6 text-text-main-100" />
             </button>
